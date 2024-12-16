@@ -22,7 +22,7 @@ Altere conforme necessário, o script do passo 4 tem essas infos como output
 
    ```
 
-   docker-compose up -d
+   docker compose up -d
 
    ```
 
@@ -30,7 +30,7 @@ Altere conforme necessário, o script do passo 4 tem essas infos como output
 
    ```
 
-   ./setup-localstack.sh
+   sh setup-localstack.sh
 
    ```
 
