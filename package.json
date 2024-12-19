@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/credential-providers": "^3.715.0",
     "@opensearch-project/opensearch": "^2.13.0",
     "@prisma/client": "^6.0.1",
     "@types/node": "^22.10.2",
