@@ -17,6 +17,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       '@opensearch-project/opensearch': path.resolve(__dirname, 'node_modules/@opensearch-project/opensearch'),
+      '@opensearch-project/opensearch/aws': path.resolve(__dirname, 'node_modules/@opensearch-project/opensearch/lib/aws'),
     },
   },
   output: {
