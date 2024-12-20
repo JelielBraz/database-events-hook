@@ -1,5 +1,8 @@
 # #!/bin/bash
 
+# Carregar variáveis de ambiente do arquivo .env
+. "$(dirname "$0")/.env"
+
 # Remove the /dist directory and /src/lambda.zip file if they exist
 rm -rf dist
 rm -f src/lambda.zip
@@ -31,7 +34,8 @@ awslocal lambda create-function --function-name sqsConsumer \
   --runtime nodejs14.x \
   --handler lambda.handler \
   --zip-file fileb://src/lambda.zip \
-  --role arn:aws:iam::000000000000:role/lambda-role
+  --role arn:aws:iam::000000000000:role/lambda-role \
+  --environment Variables="{SNS_TOPIC_ARN=$TOPIC_ARN, SQS_QUEUE_URL=$QUEUE_URL, DATABASE_URL=$DATABASE_URL, OPENSEARCH_NODE=$OPENSEARCH_NODE, AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY}"
 
 # Create event source mapping
 awslocal lambda create-event-source-mapping \
