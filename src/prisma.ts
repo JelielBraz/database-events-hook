@@ -10,7 +10,7 @@ prisma.$use(async (params, next) => {
   if (["create", "update", "delete"].includes(params.action)) {
     const message = {
       event: params.action.toUpperCase(),
-      model: params.model,
+      model: params.model?.toLowerCase(),
       data: result,
       timestamp: new Date(),
     };
