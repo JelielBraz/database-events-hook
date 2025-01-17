@@ -28,6 +28,8 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
         node: process.env.OPENSEARCH_NODE!,
       });
 
+      parsedMessage.data = JSON.parse(parsedMessage.data);
+
       const model: Model = {
         index: parsedMessage.model,
         id: parsedMessage.data?.id,
