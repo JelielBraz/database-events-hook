@@ -7,7 +7,7 @@ import { ResponseError } from "@opensearch-project/opensearch/lib/errors";
 interface Model {
   index: string;
   id: number;
-  data: any;
+  data: any; 
 }
 
 export const handler: SQSHandler = async (event: SQSEvent) => {
@@ -35,9 +35,6 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
         id: parsedMessage.data?.id,
         data: parsedMessage.data,
       };
-
-      console.log(`Modelo a ser indexado: ${model.index}`);
-      console.log(`ID do modelo a ser indexado: ${model.id}`);
 
       await openSearchClient.index({
         index: model.index,
