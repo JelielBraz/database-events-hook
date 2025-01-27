@@ -73,11 +73,20 @@ echo "Recurso '/search' criado com ID: $RESOURCE_ID"
 
 # Adicionar método GET ao recurso '/search'
 echo "Adicionando método GET ao recurso '/search'"
-awslocal apigateway put-method --rest-api-id "$API_ID" --resource-id "$RESOURCE_ID" --http-method GET --authorization-type "NONE"
+awslocal apigateway put-method \
+  --rest-api-id "$API_ID" \
+  --resource-id "$RESOURCE_ID" \
+  --http-method GET --authorization-type "NONE"
 
 # Configurar integração MOCK para o método GET
 echo "Configurando integração MOCK para o método GET"
-awslocal apigateway put-integration --rest-api-id $API_ID --resource-id $RESOURCE_ID --http-method GET --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:localstack:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:000000000000:function:apiGatewayHandler/invocations
+awslocal apigateway put-integration \
+ --rest-api-id $API_ID \
+ --resource-id $RESOURCE_ID \
+ --http-method GET \
+ --type AWS_PROXY \
+ --integration-http-method POST \
+ --uri arn:aws:apigateway:localstack:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:000000000000:function:apiGatewayHandler/invocations
 
 
 # Implantar a API

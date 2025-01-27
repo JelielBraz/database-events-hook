@@ -3,6 +3,7 @@ import { SQSEvent, SQSHandler, APIGatewayEvent, APIGatewayProxyHandler, APIGatew
 import { Client } from "@opensearch-project/opensearch";
 import { AwsSigv4Signer } from "@opensearch-project/opensearch/lib/aws";
 import { ResponseError } from "@opensearch-project/opensearch/lib/errors";
+import { join } from "path";
 
 interface Model {
   index: string;
@@ -56,15 +57,17 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
 };
 
 export const apiGatewayHandler: APIGatewayProxyHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
-  console.log("Logouu!");
-  console.log(event);
-  console.log('----------');
-  console.log(event.body);
-  console.log('----------');
-  console.log(event.queryStringParameters);
-  console.log('----------');
-  console.log(event.pathParameters);
+  console.log('-------');
+  let params = event.queryStringParameters || {}
+  console.log('-------');
+  console.log(params.page)
+  console.log('-------');
+  console.log('-------');
 
+  let currentPage =  Number(params.page) || 1; 
+  let pageSize = Number(params.limitPerPage) || 1;
+  const from = (currentPage - 1) * pageSize;
+  
   const openSearchClient = new Client({
     ...AwsSigv4Signer({
       region: "sa-east-1",
@@ -77,20 +80,38 @@ export const apiGatewayHandler: APIGatewayProxyHandler = async (event: APIGatewa
   });
 
   let searchAttributes = {
-    index: "payment",
+    index: params.topic,
     body: {
       query: {
         match_all: {}
       },
-      size: 20
-      
+      sort: [
+        {
+          ['id']: 'asc'
+        }
+      ],
+      from : from,
+      size: pageSize
     }
   };
 
   const response = await openSearchClient.search(searchAttributes);
 
+  // const response = await openSearchClient.deleteByQuery({
+  //   index: 'customer',
+  //   body: {
+  //     query: {  
+  //       match_all: {} 
+  //     }
+  //   }
+  // });
+
+  console.log("jeliel")
+  console.log(JSON.stringify(response.body.hits))
+
   return {
     statusCode: 200,
-    body: JSON.stringify(response)
+    body: JSON.stringify(response.body.hits)
   };
 } 
+
