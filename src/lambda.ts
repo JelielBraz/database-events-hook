@@ -15,8 +15,7 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
   for (const record of event.Records) {
     try {
       const { body, receiptHandle } = record;
-      const message = JSON.parse(body).Message;
-      const parsedMessage = JSON.parse(message);
+      const message = JSON.parse(body);
 
       const openSearchClient = new Client({
         ...AwsSigv4Signer({
@@ -29,12 +28,11 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
         node: process.env.OPENSEARCH_NODE!,
       });
 
-      parsedMessage.data = JSON.parse(parsedMessage.data);
 
       const model: Model = {
-        index: parsedMessage.model,
-        id: parsedMessage.data?.id,
-        data: parsedMessage.data,
+        index: message.topic,
+        id: message.id,
+        data: message,
       };
 
       await openSearchClient.index({
@@ -57,12 +55,7 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
 };
 
 export const apiGatewayHandler: APIGatewayProxyHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
-  console.log('-------');
   let params = event.queryStringParameters || {}
-  console.log('-------');
-  console.log(params.page)
-  console.log('-------');
-  console.log('-------');
 
   let currentPage =  Number(params.page) || 1; 
   let pageSize = Number(params.limitPerPage) || 1;
@@ -98,16 +91,13 @@ export const apiGatewayHandler: APIGatewayProxyHandler = async (event: APIGatewa
   const response = await openSearchClient.search(searchAttributes);
 
   // const response = await openSearchClient.deleteByQuery({
-  //   index: 'customer',
+  //   index: 'payment',
   //   body: {
   //     query: {  
   //       match_all: {} 
   //     }
   //   }
   // });
-
-  console.log("jeliel")
-  console.log(JSON.stringify(response.body.hits))
 
   return {
     statusCode: 200,
