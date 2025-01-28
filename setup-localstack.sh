@@ -12,7 +12,7 @@ TOPIC_ARN=$(awslocal sns create-topic --name prisma-events --query 'TopicArn' --
 echo "Created SNS topic with ARN: $TOPIC_ARN"
 
 # Create SQS queue
-QUEUE_URL=$(awslocal sqs create-queue --queue-name MyQueue --query 'QueueUrl' --output text)
+QUEUE_URL=$(awslocal sqs create-queue --queue-name payments.fifo --attributes FifoQueue=true --query 'QueueUrl' --output text)
 echo "Created SQS queue with URL: $QUEUE_URL"
 
 # Get SQS queue ARN
