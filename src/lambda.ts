@@ -57,9 +57,9 @@ export const handler: SQSHandler = async (event: SQSEvent) => {
 export const apiGatewayHandler: APIGatewayProxyHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   let params = event.queryStringParameters || {}
 
-  let currentPage =  Number(params.page) || 1; 
-  let pageSize = Number(params.limitPerPage) || 1;
-  const from = (currentPage - 1) * pageSize;
+  const from =  Number(params.offset) || 0; 
+  const pageSize = Number(params.limitPerPage) || 10;
+
   
   const openSearchClient = new Client({
     ...AwsSigv4Signer({
